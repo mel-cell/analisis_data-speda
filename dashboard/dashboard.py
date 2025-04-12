@@ -28,7 +28,7 @@ data_sepeda['weather_label'] = data_sepeda['weathersit'].map(weather_labels)
 
 # Sidebar filter
 with st.sidebar:
-    st.title("\ud83d\udd0d Filter Data")
+    st.title("Filter Data")
 
     min_date = data_sepeda['dteday'].min().date()
     max_date = data_sepeda['dteday'].max().date()
@@ -192,4 +192,4 @@ ax.set_xlabel("Jumlah Penyewaan")
 ax.set_ylabel("Frekuensi")
 st.pyplot(fig)
 
-st.caption("\ud83d\udccc Data dianalisis berdasarkan kombinasi filter waktu, musim, hari, dan cuaca, serta pengaruh suhu, kelembaban, dan kecepatan angin untuk menyesuaikan kebutuhan insight yang fleksibel dan informatif.")
+st.caption("Data dianalisis berdasarkan kombinasi filter waktu, musim, hari, dan cuaca, serta pengaruh suhu, kelembaban, dan kecepatan angin untuk menyesuaikan kebutuhan insight yang fleksibel dan informatif.")
