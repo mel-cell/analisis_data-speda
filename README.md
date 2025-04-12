@@ -8,20 +8,6 @@ Analisis dilakukan mulai dari tahap eksplorasi data, pembersihan data, hingga vi
 
 ---
 
-## 🧱 Struktur Folder
-
-python visual data
-├───dashboard
-| ├───main_data.csv
-| └───dashboard.py
-├───data
-| ├───day.csv
-| └───hour.csv
-├───notebook.ipynb
-├───README.md
-└───requirements.txt
-
----
 
 ## 🛠️ Cara Menjalankan Proyek
 

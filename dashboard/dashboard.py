@@ -26,13 +26,10 @@ weather_labels = {
 data_sepeda['season_label'] = data_sepeda['season'].map(season_labels)
 data_sepeda['weather_label'] = data_sepeda['weathersit'].map(weather_labels)
 
-# ======================
-# SIDEBAR FILTER
-# ======================
+# Sidebar filter
 with st.sidebar:
-    st.title("🔍 Filter Data")
+    st.title("\ud83d\udd0d Filter Data")
 
-    # Filter tanggal
     min_date = data_sepeda['dteday'].min().date()
     max_date = data_sepeda['dteday'].max().date()
     date_range = st.date_input(
@@ -42,28 +39,24 @@ with st.sidebar:
         max_value=max_date
     )
 
-    # Filter musim
     selected_seasons = st.multiselect(
         "Pilih Musim",
         options=data_sepeda['season_label'].unique(),
         default=data_sepeda['season_label'].unique()
     )
 
-    # Filter tipe hari
     day_type = st.multiselect(
         "Tipe Hari",
         options=['Hari Kerja', 'Hari Libur'],
         default=['Hari Kerja', 'Hari Libur']
     )
 
-    # Filter cuaca
     selected_weather = st.multiselect(
         "Kondisi Cuaca",
         options=data_sepeda['weather_label'].unique(),
         default=data_sepeda['weather_label'].unique()
     )
 
-# Proses Filter Data
 def apply_filters(data):
     if len(date_range) == 2:
         start_date, end_date = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
@@ -81,30 +74,24 @@ def apply_filters(data):
 
 filtered_data = apply_filters(data_sepeda)
 
-# ======================
-# BAGIAN UTAMA DASHBOARD
-# ======================
-st.title("📊 Dashboard Analisis Penyewaan Sepeda")
-
-# Tambahan kolom waktu
+# Kolom waktu tambahan
 filtered_data['bulan'] = filtered_data['dteday'].dt.month
 filtered_data['tahun'] = filtered_data['dteday'].dt.year
 filtered_data['hari'] = filtered_data['dteday'].dt.day
 filtered_data['minggu'] = filtered_data['dteday'].dt.isocalendar().week
 filtered_data['hari_dalam_minggu'] = filtered_data['dteday'].dt.day_name(locale='id_ID')
 
-# ==========================
-# VISUALISASI UMUM
-# ==========================
-st.header("🔎 Ikhtisar Penggunaan Sepeda")
+# Judul dashboard
+st.title("\ud83d\udcca Dashboard Analisis Penyewaan Sepeda")
+
+# Ikhtisar
+st.header("\ud83d\udd0e Ikhtisar Penggunaan Sepeda")
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Penyewaan", int(filtered_data['cnt'].sum()))
 col2.metric("Rata-Rata Harian", f"{filtered_data['cnt'].mean():.1f}")
 col3.metric("Jumlah Hari Unik", filtered_data['dteday'].nunique())
 
-# ===========================================
-# VISUALISASI MUSIM & CUACA
-# ===========================================
+# Musim & Cuaca
 st.header("Dampak Musim dan Cuaca terhadap Penyewaan")
 row1, row2 = st.columns(2)
 
@@ -122,9 +109,7 @@ with row2:
     ax.set_title("Distribusi Penyewaan Berdasarkan Kondisi Cuaca")
     st.pyplot(fig)
 
-# ===========================================
-# VISUALISASI TAMBAHAN: SUHU, KELEMBABAN, ANGIN
-# ===========================================
+# Lingkungan
 st.header("Korelasi Lingkungan terhadap Penyewaan")
 col4, col5 = st.columns(2)
 
@@ -148,7 +133,6 @@ with col5:
     ax.grid(True)
     st.pyplot(fig)
 
-# Kecepatan angin
 st.subheader("Kecepatan Angin vs Penyewaan")
 fig, ax = plt.subplots(figsize=(12, 5))
 color = sns.color_palette("husl", 1)[0]
@@ -159,9 +143,7 @@ ax.set_ylabel("Jumlah Penyewaan")
 ax.grid(True)
 st.pyplot(fig)
 
-# ===========================================
-# VISUALISASI 2: HARI KERJA vs HARI LIBUR
-# ===========================================
+# Hari Kerja vs Libur
 st.header("Perbandingan Penyewaan: Hari Kerja vs Hari Libur")
 fig, ax = plt.subplots(figsize=(10, 5))
 filtered_data['Tipe Hari'] = filtered_data['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Hari Libur')
@@ -171,9 +153,7 @@ ax.set_ylabel("Jumlah Penyewaan")
 ax.set_xlabel("")
 st.pyplot(fig)
 
-# ===========================================
-# VISUALISASI TREN TAHUNAN
-# ===========================================
+# Tren Tahunan
 st.header("Tren Penyewaan Sepeda Tahunan")
 fig, ax = plt.subplots(figsize=(12, 6))
 tren_tahunan = filtered_data.groupby('tahun')['cnt'].sum().reset_index()
@@ -181,9 +161,7 @@ sns.barplot(x='tahun', y='cnt', data=tren_tahunan, palette='viridis', ax=ax)
 ax.set_title("Total Penyewaan per Tahun")
 st.pyplot(fig)
 
-# ===========================================
-# VISUALISASI BULANAN
-# ===========================================
+# Tren Bulanan
 st.header("Tren Penyewaan Sepeda Bulanan")
 fig, ax = plt.subplots(figsize=(12, 6))
 tren_bulanan = filtered_data.groupby('bulan')['cnt'].sum().reset_index()
@@ -196,9 +174,7 @@ ax.set_ylabel("Jumlah Penyewaan")
 ax.grid(True)
 st.pyplot(fig)
 
-# ===========================================
-# VISUALISASI KORELASI
-# ===========================================
+# Korelasi
 st.header("Korelasi antar Variabel")
 st.write("Peta korelasi antara variabel lingkungan dan jumlah penyewaan.")
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -207,9 +183,7 @@ sns.heatmap(filtered_data[numeric_cols].corr(), annot=True, cmap='YlGnBu', ax=ax
 ax.set_title("Heatmap Korelasi")
 st.pyplot(fig)
 
-# ===========================================
-# DISTRIBUSI PENYEWAAN HARIAN
-# ===========================================
+# Distribusi Harian
 st.header("Distribusi Jumlah Penyewaan Harian")
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.histplot(filtered_data['cnt'], bins=30, kde=True, color='skyblue', ax=ax)
@@ -218,5 +192,4 @@ ax.set_xlabel("Jumlah Penyewaan")
 ax.set_ylabel("Frekuensi")
 st.pyplot(fig)
 
-# Catatan tambahan
-st.caption("📌 Data dianalisis berdasarkan kombinasi filter waktu, musim, hari, dan cuaca, serta pengaruh suhu, kelembaban, dan kecepatan angin untuk menyesuaikan kebutuhan insight yang fleksibel dan informatif.")
+st.caption("\ud83d\udccc Data dianalisis berdasarkan kombinasi filter waktu, musim, hari, dan cuaca, serta pengaruh suhu, kelembaban, dan kecepatan angin untuk menyesuaikan kebutuhan insight yang fleksibel dan informatif.")
