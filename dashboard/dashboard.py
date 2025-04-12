@@ -82,10 +82,10 @@ filtered_data['minggu'] = filtered_data['dteday'].dt.isocalendar().week
 filtered_data['hari_dalam_minggu'] = filtered_data['dteday'].dt.day_name(locale='id_ID')
 
 # Judul dashboard
-st.title("\ud83d\udcca Dashboard Analisis Penyewaan Sepeda")
+st.title("Dashboard Analisis Penyewaan Sepeda")
 
 # Ikhtisar
-st.header("\ud83d\udd0e Ikhtisar Penggunaan Sepeda")
+st.header("Ikhtisar Penggunaan Sepeda")
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Penyewaan", int(filtered_data['cnt'].sum()))
 col2.metric("Rata-Rata Harian", f"{filtered_data['cnt'].mean():.1f}")
